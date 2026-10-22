@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#164d43">
+  <meta name="description" content="以具體課綱條目探索國小、國中與高中自然科的直接關係，查看四科原文、學習內容說明與範圍界線。">
+  <title>自然課綱・縱向探索</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="excel-import.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳至主要內容</a>
+  <header class="app-header" aria-label="科目與主線導覽">
+    <div class="app-header-top">
+    <a class="brand" href="#U01" aria-label="自然課綱首頁">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9 29 20 10l11 19M9 29h22"/><circle cx="20" cy="10" r="4"/><circle cx="9" cy="29" r="4"/><circle cx="31" cy="29" r="4"/></svg>
+      <span>自然課綱<small>小・中・高 縱向探索</small></span>
+    </a>
+    <div class="header-actions"><span class="header-edition">108 自然科學領域課綱</span><button id="about-button" class="text-button">資料來源與判讀方式 ↗</button><button class="button library-button" data-action="library"><span data-icon="search"></span>查閱全部課綱 <span class="key">779</span></button></div>
+    </div>
+    <div class="classification-row"><div class="classification-label">科目</div><nav id="subjects" class="subjects" aria-label="科目篩選"></nav></div>
+    <div class="unit-search-row"><label for="unit-search">搜尋單元</label><input id="unit-search" type="search" placeholder="輸入名稱或主線 ID…"><span>同單元可保留未連線條目</span></div>
+    <div class="classification-row chain-row"><div class="classification-label">主線 <span id="chain-count"></span></div><nav id="chains" class="chains" aria-label="概念主線"></nav></div>
+    <details class="excel-manager"><summary>Excel 編輯與匯入 <span id="data-status">網站資料</span></summary><div class="excel-actions"><a class="button" href="assets/curriculum-editor.xlsx" download="自然課綱_全單元縱向連結_可編輯.xlsx">下載 Excel 範本</a><label class="button file-label" for="excel-file">匯入修改後的 Excel</label><input id="excel-file" type="file" accept=".xlsx" aria-label="選擇修改後的 Excel"><button id="restore-data" class="button">恢復網站資料</button></div><p>修改「縱向連結」可調整配對；修改「單元條目」可增減卡片。儲存 .xlsx 後匯入並套用，立即更新下方內容。停用填「否」，沒有直接關係的學段可留白。</p><p>匯入資料只保存在這個瀏覽器，不會同步其他裝置或修改網站發布版本；下載提供網站原始範本，請自行保留修改後的 Excel。</p><div id="import-preview" role="status" aria-live="polite"></div><button id="apply-import" class="button" hidden>套用資料</button></details>
+  </header>
+  <div class="workspace">
+    <main id="main">
+      <div class="breadcrumb">課綱探索 <span>/</span> <span id="breadcrumb-subject">生物</span></div>
+      <section class="heading" aria-labelledby="chain-title"><div><div class="eyebrow">LEARNING CONNECTIONS <span class="small-line"></span> <span id="chain-number">01 / 06</span></div><h1 id="chain-title"></h1><p id="chain-description"></p></div><div class="heading-status"><span id="basis-badge" class="badge"></span><span id="graph-stats"></span></div></section>
+      <section class="map-panel" aria-label="課綱條目連結圖">
+        <div class="map-toolbar"><div class="view-label"><span data-icon="route"></span> 學段縱向圖 <span class="small-badge">內容與說明完整並列</span></div><div class="map-controls"><label class="toggle"><input id="empty-toggle" type="checkbox" checked><span class="switch"></span>空白學段</label><label class="toggle"><input id="cross-toggle" type="checkbox" checked><span class="switch"></span>跨科整合</label><button id="reset-view" class="icon-button" aria-label="回到連結圖左側" title="回到左側"><span data-icon="reset"></span></button></div></div>
+        <div class="map-hint"><span data-icon="info"></span><span>各學段以連結性排序：有連結的概念群在上方，未連結條目在下方；同群內保留 Excel 順序。內容與說明完整並列，點選連線可查看關係。</span></div>
+        <div id="map-scroller" class="map-scroller" tabindex="0" aria-label="可左右捲動的五學段連結圖"><div id="map-canvas" class="map-canvas"><div id="lanes" class="lanes"></div><svg id="connections" class="connections" aria-label="條目連線"></svg></div></div>
+        <div class="map-footer"><div class="legend"><span><i class="legend-line"></i>直接關係</span><span><i class="legend-line suggestion"></i>分析建議</span><span><i class="legend-line cross"></i>同階段／跨科整合</span></div><span id="scope-note"></span></div>
+      </section>
+      <footer class="page-footer"><span>來源：自然科學領域課綱・107 年 11 月</span><span>原文與分析分開呈現 <i></i> 全單元分析草案</span></footer>
+    </main>
+  </div>
+  <div id="drawer-overlay" class="overlay" hidden></div>
+  <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-label="課綱詳細資料" hidden><div class="drawer-top"><span id="drawer-heading"></span><button id="close-drawer" class="icon-button" aria-label="關閉詳情"><span data-icon="close"></span></button></div><div id="drawer-content" class="drawer-content"></div></aside>
+  <div id="modal-overlay" class="modal-overlay" hidden><section class="library" role="dialog" aria-modal="true" aria-labelledby="library-title"><header class="library-header"><div><span class="section-kicker">CURRICULUM LIBRARY</span><h2 id="library-title">查閱全部課綱</h2><p>779 個課綱代碼，保留學習內容與說明。</p></div><button id="close-library" class="icon-button" aria-label="關閉課綱搜尋"><span data-icon="close"></span></button></header><div class="library-filters"><label class="search-field"><span data-icon="search"></span><input id="library-search" placeholder="搜尋代碼、概念或課綱內容…" aria-label="搜尋課綱代碼與內容"></label><select id="library-subject" aria-label="篩選課綱科目"><option value="">全部科目</option><option>整合自然</option><option>生物</option><option>物理</option><option>化學</option><option>地球科學</option><option>跨科主題</option></select><select id="library-stage" aria-label="篩選學段"><option value="">全部學段</option><option value="Ⅱ">國小Ⅱ</option><option value="Ⅲ">國小Ⅲ</option><option value="Ⅳ">國中Ⅳ</option><option value="Ⅴc">高中必修</option><option value="Ⅴa">高中選修</option></select><label class="library-check"><input id="library-connected" type="checkbox">只看已有連結</label></div><div class="library-results-top"><span id="library-count" role="status"></span><span>學習內容與說明直接列出</span></div><div id="library-results" class="library-results"></div><div class="library-pagination"><button id="prev-page" class="button">上一頁</button><span id="page-label"></span><button id="next-page" class="button">下一頁</button></div></section></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
